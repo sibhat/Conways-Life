@@ -9,8 +9,12 @@ class App extends Component {
 		row: 10,
 		col: 10,
 		cellArry: [],
-		continueAnimation: false
+		continueAnimation: false,
+		range: 1,
+		speed: 1000,
+		seeded: false
 	};
+	setTimeoutId = 0;
 	componentDidMount() {
 		this.setState(
 			(prevState, prevProps) => {
@@ -22,7 +26,7 @@ class App extends Component {
 			},
 			() => {
 				this.seed();
-				requestAnimationFrame(() => this.game());
+				requestAnimationFrame(time => this.game(time));
 			}
 		);
 	}
@@ -75,12 +79,25 @@ class App extends Component {
 
 		return count;
 	};
-	stopGame = () => {
+	pauseGame = () => {
 		this.setState({ continueAnimation: false });
 	};
+	stopGame = () => {
+		this.setState({
+			cellArry: new Array(this.state.row)
+				.fill()
+				.map(item => new Array(this.state.col).fill(false)),
+			generation: 0,
+			continueAnimation: false,
+			seeded: false
+		});
+	};
 	playGame = () => {
+		if (!this.state.seeded) {
+			return;
+		}
 		this.setState({ continueAnimation: true });
-		requestAnimationFrame(() => this.game());
+		requestAnimationFrame(timestamp => this.game(timestamp));
 	};
 	seed = () => {
 		let buffer = this.deepCopyArry(this.state.cellArry);
@@ -95,42 +112,62 @@ class App extends Component {
 			});
 		});
 		this.setState({
-			cellArry: buffer
+			cellArry: buffer,
+			generation: 0,
+			seeded: true
 		});
 	};
-	game() {
+	start = null;
+	game(timestamp) {
 		if (this.state.continueAnimation) {
-			requestAnimationFrame(() => this.game());
+			requestAnimationFrame(timestamp => this.game(timestamp));
+			if (this.start === null) {
+				this.start = timestamp - 30; // milliseconds
+			}
+			let progress = timestamp - this.start;
+
+			if (progress > this.state.speed / this.state.range / 2) {
+				this.start = timestamp;
+				let buffer = this.deepCopyArry(this.state.cellArry);
+				buffer.forEach((row, i) => {
+					row.forEach((cell, x) => {
+						let count = this.count(buffer, i, x);
+						if (count === 2) {
+							buffer[i][x] = true;
+						} else if (count === 3) {
+							buffer[i][x] = true;
+						} else {
+							buffer[i][x] = false;
+						}
+					});
+				});
+				this.setState({
+					cellArry: buffer,
+					generation: this.state.generation + 1
+				});
+			}
 		}
-		let buffer = this.deepCopyArry(this.state.cellArry);
-		buffer.forEach((row, i) => {
-			row.forEach((cell, x) => {
-				let count = this.count(buffer, i, x);
-				console.log("game cout is", count);
-				if (count === 2) {
-					buffer[i][x] = true;
-				} else if (count === 3) {
-					buffer[i][x] = true;
-				} else {
-					buffer[i][x] = false;
-				}
-			});
-		});
-		this.setState({
-			cellArry: buffer,
-			generation: this.state.generation + 1
-		});
 	}
 	clickHandlerForCell = (row, col) => {
 		let buffer = this.deepCopyArry(this.state.cellArry);
 		buffer[row][col] = !buffer[row][col];
-		this.setState({ cellArry: buffer });
+		this.setState({ cellArry: buffer, seeded: true });
 	};
+	componentWillUnmount() {
+		// Stop animating
+		this.continueAnimation = false;
+		clearInterval(this.setTimeoutId);
+	}
 	deepCopyArry = arry => {
 		var newArray = arry.map(function(arr) {
 			return arr.slice();
 		});
 		return newArray;
+	};
+	handleChange = e => {
+		this.setState({
+			range: e.target.value
+		});
 	};
 	render() {
 		return (
@@ -146,8 +183,17 @@ class App extends Component {
 					/>
 					<div className="controles">
 						<Button text="Play" onclick={this.playGame} />
-						<Button text="Pause" />
+						<Button text="Pause" onclick={this.pauseGame} />
 						<Button text="stop" onclick={this.stopGame} />
+						<label htmlFor="range">Speed: {this.state.range}</label>
+						<input
+							type="range"
+							name="range"
+							min="0"
+							max="5"
+							value={this.state.range}
+							onChange={this.handleChange}
+						/>
 					</div>
 				</div>
 				<div className="Presets">
