@@ -1,0 +1,31 @@
+canvas {
+	width: 400px;
+	height: 400px;
+	border: 1px solid black;
+	display: flex;
+	flex-wrap: wrap;
+}
+button {
+	width: 100px;
+	height: 80px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border: 1px solid rgb(47, 247, 7);
+}
+.cell {
+	width: 20px;
+	height: 20px;
+	border: 1px solid black;
+	display: inline-block;
+	box-sizing: border-box;
+}
+.cell:hover {
+	background-color: bisque;
+}
+.cell.on {
+	background-color: green;
+}
+.cell.off {
+	background-color: azure;
+}
