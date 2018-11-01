@@ -4,6 +4,8 @@ import Button from "./components/Button";
 import "./App.css";
 import Presets from "./components/Presets";
 import Rules from "./components/Rules";
+import Landing from "./components/svg/Landing";
+import anime from "animejs";
 
 class App extends Component {
 	state = {
@@ -17,7 +19,8 @@ class App extends Component {
 		seeded: false,
 		showPreset: false,
 		showRuls: false,
-		playing: false
+		playing: false,
+		landingPage: true
 	};
 	setTimeoutId = 0;
 	componentDidMount() {
@@ -44,7 +47,7 @@ class App extends Component {
 				if (arry[rows][cols]) count++;
 			}
 		}
-		count--;
+		count -= 1;
 		return count;
 	};
 	pauseGame = () => {
@@ -101,10 +104,12 @@ class App extends Component {
 				buffer.forEach((row, i) => {
 					row.forEach((cell, x) => {
 						let count = this.count(buffer, i, x);
-						if (count === 2 || count === 3) {
-							buffer[i][x] = true;
-						} else {
-							buffer[i][x] = false;
+						if (buffer[i][x] && count === 2) {
+							buffer[i][x] = true; //stasis
+						} else if (count === 3) {
+							buffer[i][x] = true; //birth
+						} else if (count > 3 || count < 2) {
+							buffer[i][x] = false; //die
 						}
 					});
 				});
@@ -146,10 +151,47 @@ class App extends Component {
 	handleRules = e => {
 		this.setState({ showRuls: !this.state.showRuls });
 	};
+	landingPage = e => {
+		var timeline = anime.timeline({
+			autoplay: true,
+			direction: "alternate",
+			loop: false
+		});
+		timeline.add({
+			targets: ".landing",
+			d: [
+				{
+					value:
+						"M8,9C458.568,82.846,1016.49-6.57,1125,113c173.68,199.406,113.33,586.667,170,880L9,990"
+				},
+				{
+					value:
+						"M8,9C62.878,218.835,164.977,409.854,310,567c253.625,274.826,612.45,418.593,985,426L9,990"
+				}
+			],
+			opacity: 0,
+			duration: 1000,
+			easing: "easeInQuad"
+		});
+		timeline.finished.then(k => {
+			anime({
+				targets: ".landing",
+				opacity: 0,
+				translateX: -500,
+				easing: "easeInQuart",
+				complete: () => {
+					this.setState({ landingPage: false });
+				}
+			});
+		});
+	};
 	render() {
 		return (
 			<div className="App">
 				<nav className="nav">Home</nav>
+				{this.state.landingPage && (
+					<Landing landingPage={this.landingPage} />
+				)}
 				<div className="main">
 					<div className="grid">
 						<Canvas

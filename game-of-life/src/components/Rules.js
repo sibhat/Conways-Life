@@ -1,5 +1,4 @@
 import React from "react";
-import Button from "./Button";
 const Rules = ({ seed, showPreset, handlePresets }) => {
 	return (
 		<div className="Presets">

@@ -53,3 +53,16 @@ nav {
 	justify-content: center;
 	align-items: center;
 }
+.center {
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	letter-spacing: 1.5px;
+	box-sizing: border-box;
+	/* border: 1px solid white; */
+	padding: 24px;
+}
+.center span {
+	font-size: 13px;
+}
