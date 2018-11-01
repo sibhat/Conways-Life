@@ -25,7 +25,7 @@ class Canvas extends Component {
 				<h1>Generation {this.props.generation}</h1>
 				<div
 					style={{
-						width: this.props.row * this.props.row * 2,
+						width: "400px",
 						margin: "auto"
 					}}
 				>

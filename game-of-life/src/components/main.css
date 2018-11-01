@@ -20,8 +20,8 @@
 }
 
 .cell {
-	width: 20px;
-	height: 20px;
+	width: 40px;
+	height: 40px;
 	border: 1px solid black;
 	display: inline-block;
 	box-sizing: border-box;
@@ -30,7 +30,9 @@
 	background-color: bisque;
 }
 .cell.on {
-	background-color: green;
+	background-image: url("./svg/jack-o-lantern-silhouette-12.png");
+	background-size: cover;
+	background-color: azure;
 }
 .cell.off {
 	background-color: azure;
@@ -45,4 +47,16 @@ svg image {
 	fill: #efefef;
 	stroke: #fff;
 	fill-rule: evenodd;
+}
+ul {
+	display: block;
+	margin: auto;
+	text-align: start;
+}
+ul li {
+	list-style: circle;
+	margin: 10px 0;
+}
+.disable {
+	cursor: not-allowed;
 }
