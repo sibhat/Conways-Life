@@ -21,11 +21,16 @@ class Canvas extends Component {
 			})
 		);
 		return (
-			<div
-				className="canvas"
-				style={{ width: this.props.row * this.props.row * 2 }}
-			>
-				{table}
+			<div className="canvas">
+				<h1>Generation {this.props.generation}</h1>
+				<div
+					style={{
+						width: this.props.row * this.props.row * 2,
+						margin: "auto"
+					}}
+				>
+					{table}
+				</div>
 			</div>
 		);
 	}

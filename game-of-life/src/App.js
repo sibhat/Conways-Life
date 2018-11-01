@@ -173,7 +173,6 @@ class App extends Component {
 		return (
 			<div className="App">
 				<div className="main">
-					<h1>Generation {this.state.generation}</h1>
 					<Canvas
 						cells={this.state.cellArry}
 						row={this.state.row}
@@ -182,25 +181,29 @@ class App extends Component {
 						onclick={this.clickHandlerForCell}
 					/>
 					<div className="controles">
-						<Button text="Play" onclick={this.playGame} />
-						<Button text="Pause" onclick={this.pauseGame} />
-						<Button text="stop" onclick={this.stopGame} />
-						<label htmlFor="range">Speed: {this.state.range}</label>
-						<input
-							type="range"
-							name="range"
-							min="0"
-							max="5"
-							value={this.state.range}
-							onChange={this.handleChange}
-						/>
+						<Button onclick={this.playGame} play />
+						<Button onclick={this.pauseGame} pause />
+						<Button onclick={this.stopGame} stop />
+						<div>
+							<label htmlFor="range">
+								Speed: {this.state.range}
+							</label>
+							<input
+								type="range"
+								name="range"
+								min="0"
+								max="5"
+								value={this.state.range}
+								onChange={this.handleChange}
+							/>
+						</div>
 					</div>
 				</div>
 				<div className="Presets">
-					<Button text="Preset 1" onclick={this.seed} />
-					<Button text="Preset 2" />
-					<Button text="Preset 3" />
-					<Button text="Preset 4" />
+					<Button text="Preset 1" onclick={this.seed} preset />
+					<Button text="Preset 2" preset />
+					<Button text="Preset 3" preset />
+					<Button text="Preset 4" preset />
 				</div>
 			</div>
 		);
